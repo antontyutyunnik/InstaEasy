@@ -27,7 +27,7 @@ sys.excepthook = log_uncaught_exceptions
 
 class MyWin(QtWidgets.QMainWindow):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None): # Показывает форму авторизации
         QtWidgets.QWidget.__init__(self, parent)
         self.secondWin = None
         self.setWindowIcon(QtGui.QIcon('icon.png'))
@@ -37,7 +37,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.MyWin = []
 
 
-    def pushButton_clicked(self,):
+    def pushButton_clicked(self,): # Запускает Chrome Browser
         self.driver = webdriver.Chrome()
         self.driver.set_window_position(-7, 0)
         self.driver.set_window_size(640, 772)
@@ -45,7 +45,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.login()
 
 
-    def login(self):
+    def login(self): # Авторизации пользователя
         username = 'anna_kanswer'
         password = '4005001610lm'
         #username = self.ui.lineEdit.text()
@@ -60,7 +60,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.check_error_login()
 
 
-    def check_error_login(self):
+    def check_error_login(self):# Выводит сообщение о неверной авторизации
         try:
             self.driver.find_element_by_id('slfErrorAlert')
         except:
@@ -74,24 +74,24 @@ class MyWin(QtWidgets.QMainWindow):
         return self.ui.lineEdit_3.setText('Неверный Логин или Пароль'),self.driver.quit()
 
 
-    def openWin2(self):
+    def openWin2(self):# Открывает Окно Пользователей
         if not self.secondWin:
             self.secondWin = MyWin2(self)
         self.secondWin.show()
 
 
-    def thread(fn):
+    def thread(fn):# Запускает Второй Поток
         def execute(*args, **kwargs):
             threading.Thread(target=fn, args=args, kwargs=kwargs).start()
         return execute
 
 
     @thread
-    def bloggers_username_pars(self):
+    def bloggers_username_pars(self):#  Процесс Подписки на Блогеров
         blogger_list = []
         urls = []
         urls.append(base_url)
-        session = requests.Session()
+        session = requests.Session()                          # Парсинг Url Bloggers
         request = session.get(base_url, headers=headers)
         if request.status_code == 200:
             for i in range(1, 4):
@@ -106,7 +106,7 @@ class MyWin(QtWidgets.QMainWindow):
                 for blogger in bloggers_info:
                     bloggername = {'bloggers-top-name': blogger.a.text}
                     blogger_list.append(bloggername['bloggers-top-name'])
-                    for url in blogger_list[-1:]:
+                    for url in blogger_list[-1:]:                           # Начало Подписки
                         self.driver.get('https://www.instagram.com/' + url.lstrip('@') + '/')
                         btn_subscr = self.wait.until(
                             EC.presence_of_element_located(
@@ -131,7 +131,7 @@ class MyWin(QtWidgets.QMainWindow):
 
 class MyWin2(QtWidgets.QMainWindow,):
 
-    def __init__(self, parent=None,):
+    def __init__(self, parent=None,):       # Показывает Окно Пользователей
         QtWidgets.QWidget.__init__(self, parent)
         self.setWindowIcon(QtGui.QIcon('icon.png'))
         self.ui = Ui_MainWindow2()
